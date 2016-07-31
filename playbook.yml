@@ -3,7 +3,7 @@
   connection: local
   become: true
   vars:
-    - haproxy_repo: 'ppa:vbernat/haproxy-1.5'
+    - haproxy_repo: 'ppa:vbernat/haproxy-1.4'
   tasks:
     - name: Installing apt-transport-https
       apt:
