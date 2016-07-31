@@ -3,7 +3,6 @@
   connection: local
   become: true
   vars:
-    - haproxy_repo: 'ppa:vbernat/haproxy-1.4'
   tasks:
     - name: Installing apt-transport-https
       apt:
@@ -18,12 +17,6 @@
     - name: Installing dumb-init
       apt:
         deb: "https://github.com/Yelp/dumb-init/releases/download/v1.0.2/dumb-init_1.0.2_amd64.deb"
-
-    - name: Adding HAProxy PPA
-      apt_repository:
-        repo: "{{ haproxy_repo }}"
-        state: "present"
-        update_cache: yes
 
     - name: Installing HAProxy and Socat
       apt:
