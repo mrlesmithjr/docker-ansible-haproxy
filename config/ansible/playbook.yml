@@ -35,6 +35,6 @@
         state: "present"
         install_recommends: no
       with_items:
-        - 'haproxy={{ haproxy_ver }}'
+        - 'haproxy'
         - 'hatop'
         - 'socat'
