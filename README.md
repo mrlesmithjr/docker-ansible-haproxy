@@ -12,7 +12,7 @@ Build
 
 `Dockerfile`
 ```
-FROM mrlesmithjr/haproxy
+FROM mrlesmithjr/haproxy:alpine
 COPY config/haproxy.cfg /etc/haproxy/haproxy.cfg
 ```
 ```
