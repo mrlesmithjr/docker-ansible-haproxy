@@ -16,4 +16,5 @@ RUN chmod +x /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-COPY config/supervisord/*.ini /etc/supervisor.d/
+# Container start-up
+CMD ["/usr/sbin/haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db"]
