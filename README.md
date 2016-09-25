@@ -1,22 +1,19 @@
 Repository Information
 ======================
 Builds a [Docker] container running [HAProxy] ready for use. Provisioning
-provided via [Ansible].
+provided via [Ansible]. This image will be used for the latest [Docker] Swarm
+mode 1.12.
 
 How-To
 ------
-No default `haproxy.cfg` is provided. You will need to consume this container
-and provide your desired `haproxy.cfg` into the `config/` folder.
+Define HAProxy configurations in `config/haproxy.cfg` and either build the
+new image or push to [Docker] hub or etc.
 
-Build
-
-`Dockerfile`
+Consuming
+---------
+From [Docker] Hub:
 ```
-FROM mrlesmithjr/haproxy:alpine
-COPY config/haproxy.cfg /etc/haproxy/haproxy.cfg
-```
-```
-docker build -t my-haproxy .
+docker service create haproxy -p 9090 mrlesmithjr/haproxy:swarm
 ```
 
 License
