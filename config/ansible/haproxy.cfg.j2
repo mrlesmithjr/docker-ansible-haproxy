@@ -1,0 +1,60 @@
+global
+  log 127.0.0.1 local0
+  log 127.0.0.1 local1 notice
+  chroot /var/lib/haproxy
+  user haproxy
+  group haproxy
+  # daemon
+{% for item in haproxy_global %}
+    {{ item }}
+{% endfor %}
+
+defaults
+{% for item in haproxy_defaults %}
+    {{ item }}
+{% endfor %}
+
+{% if enable_haproxy_admin_page %}
+userlist STATSUSERS
+    group admin users admin
+    user {{ haproxy_admin_user }} insecure-password {{ haproxy_admin_password }}
+
+listen stats
+    bind *:{{ haproxy_admin_port }}
+    mode http
+    stats enable
+    stats refresh 60s
+    stats uri /
+    acl AuthOkay_ReadOnly http_auth(STATSUSERS)
+    acl AuthOkay_Admin http_auth_group(STATSUSERS) admin
+    stats http-request auth realm stats unless AuthOkay_ReadOnly
+{% endif %}
+
+{% if haproxy_configs is defined and haproxy_configs != 'None' %}
+{%   for item in haproxy_configs %}
+{%     if item.enabled %}
+frontend {{ item.frontend_name }}-{{ item.frontend_bind_port }}
+{%       if item.mode is defined %}
+    mode {{ item.mode }}
+{%       endif %}
+    bind *:{{ item.frontend_bind_port }}
+    default_backend {{ item.backend_name }}-{{ item.backend_servers_bind_port }}
+
+{%     endif %}
+{%   endfor %}
+{%   for item in haproxy_configs %}
+{%     if item.enabled %}
+backend {{ item.backend_name }}-{{ item.backend_servers_bind_port }}
+{%       if item.mode is defined %}
+    mode {{ item.mode }}
+{%       endif %}
+{%       if item.options is defined %}
+{%         for option in item.options %}
+    option {{ option }}
+{%         endfor %}
+{%       endif %}
+    server {{ server }} {{ server }}:{{ item.backend_servers_bind_port }}{% if item.backend_checks %} check{% endif %}
+
+{%     endif %}
+{%   endfor %}
+{% endif %}

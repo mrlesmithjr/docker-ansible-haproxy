@@ -2,8 +2,11 @@ FROM mrlesmithjr/haproxy:alpine
 
 MAINTAINER Larry Smith Jr. <mrlesmithjr@gmail.com>
 
-# Copy HAProxy Configuration Into Image
-COPY config/haproxy.cfg /etc/haproxy/
+# Copy Ansible files
+COPY config/ansible/ /
+
+# Execute Ansible Playbook
+RUN ansible-playbook -i "localhost," -c local /haproxy.yml
 
 # Expose Ports
 EXPOSE 9090
