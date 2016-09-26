@@ -8,19 +8,22 @@
     haproxy_admin_port: '9090'
     haproxy_admin_user: 'admin'
     haproxy_configs:
-      - name: 'web_services'
+      - name: 'es_masters_9200'
         enabled: true
-        mode: 'http'
+        mode: 'tcp'
         bind_ports:
-          - '80'
-          - '443'
+          - '9200'
         services:
-          - name: 'web-app' # Define name as back-end service name
-            acl_name_prefix: 'url' # Define acl prefix name...
-            acl: false # Define if acl mode should be used
-            backend_service_port: '80' # Define back-end service listening port
-            path_beg: '/apache' # Define /name for redirect...ie...http://haproxy/apache or http://haproxy/something
-            prefix_redirect: '/'
+          - name: 'es-masters' # Define name as back-end service name
+            backend_service_port: '9200' # Define back-end service listening port
+      - name: 'es_masters_9300'
+        enabled: true
+        mode: 'tcp'
+        bind_ports:
+          - '9300'
+        services:
+          - name: 'es-masters' # Define name as back-end service name
+            backend_service_port: '9300' # Define back-end service listening port
     haproxy_defaults:  #defines default configurations for default block
       - 'log global'
       - 'maxconn 40000'

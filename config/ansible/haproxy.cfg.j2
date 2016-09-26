@@ -38,17 +38,7 @@ frontend {{ item.name }}
 {%       endfor %}
 
 {%       for service in item.services %}
-{%         if service.acl %}
-{%           if service.prefix_redirect is defined %}
-  acl req_path path_beg {{ service.path_beg }}
-  acl red_path path_beg {{ service.prefix_redirect }}
-  redirect prefix code 301 if req_path red_path
-  acl {{ service.acl_name_prefix }}_{{ service.name }} path_beg {{ service.prefix_redirect }}
-{%           elif service.prefix_redirect is not defined %}
-  acl {{ service.acl_name_prefix }}_{{ service.name }} path_beg {{ service.path_beg }}
-{%           endif %}
-  use_backend {{ service.name }}-be if {{ service.acl_name_prefix }}_{{ service.name }}
-{%         endif %}
+  use_backend {{ service.name }}-be
 {%       endfor %}
 
 {%     endif %}
