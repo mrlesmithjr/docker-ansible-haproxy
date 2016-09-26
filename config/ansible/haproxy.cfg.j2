@@ -2,28 +2,28 @@ global
   log 127.0.0.1 local0
   log 127.0.0.1 local1 notice
 {% for item in haproxy_global %}
-    {{ item }}
+  {{ item }}
 {% endfor %}
 
 defaults
 {% for item in haproxy_defaults %}
-    {{ item }}
+  {{ item }}
 {% endfor %}
 
 {% if enable_haproxy_admin_page %}
 userlist STATSUSERS
-    group admin users admin
-    user {{ haproxy_admin_user }} insecure-password {{ haproxy_admin_password }}
+  group admin users admin
+  user {{ haproxy_admin_user }} insecure-password {{ haproxy_admin_password }}
 
 listen stats
-    bind *:{{ haproxy_admin_port }}
-    mode http
-    stats enable
-    stats refresh 60s
-    stats uri /
-    acl AuthOkay_ReadOnly http_auth(STATSUSERS)
-    acl AuthOkay_Admin http_auth_group(STATSUSERS) admin
-    stats http-request auth realm stats unless AuthOkay_ReadOnly
+  bind *:{{ haproxy_admin_port }}
+  mode http
+  stats enable
+  stats refresh 60s
+  stats uri /
+  acl AuthOkay_ReadOnly http_auth(STATSUSERS)
+  acl AuthOkay_Admin http_auth_group(STATSUSERS) admin
+  stats http-request auth realm stats unless AuthOkay_ReadOnly
 {% endif %}
 
 {% if haproxy_configs is defined and haproxy_configs != 'None' %}
@@ -31,16 +31,16 @@ listen stats
 {%     if item.enabled %}
 frontend {{ item.name }}
 {%       if item.mode is defined %}
-    mode {{ item.mode }}
+  mode {{ item.mode }}
 {%       endif %}
 {%       for port in item.bind_ports %}
-    bind *:{{ port }}
+  bind *:{{ port }}
 {%       endfor %}
 
 {%       for service in item.services %}
 {%         if service.acl %}
-    acl {{ service.acl_name_prefix }}_{{ service.name }} path_beg {{ service.path_beg }}
-    use_backend {{ service.name }}-be if {{ service.acl_name_prefix }}_{{ service.name }}
+  acl {{ service.acl_name_prefix }}_{{ service.name }} path_beg {{ service.path_beg }}
+  use_backend {{ service.name }}-be if {{ service.acl_name_prefix }}_{{ service.name }}
 {%         endif %}
 {%       endfor %}
 
@@ -52,10 +52,13 @@ frontend {{ item.name }}
 backend {{ service.name }}-be
 {%         if item.options is defined %}
 {%           for option in item.options %}
-    option {{ option }}
+  option {{ option }}
 {%           endfor %}
 {%         endif %}
-    server {{ service.name }} {{ service.name }}:{{ service.backend_service_port }}
+{%         if item.mode is defined %}
+  mode {{ item.mode }}
+{%         endif %}
+  server {{ service.name }} {{ service.name }}:{{ service.backend_service_port }}
 {%       endfor %}
 {%     endif %}
 {%   endfor %}
