@@ -39,8 +39,8 @@ frontend {{ item.name }}
 
 {%       for service in item.services %}
 {%         if service.acl %}
-    acl {{ service.acl_name_prefix }}_ path_beg {{ service.path_beg }}
-    use_backend {{ item.name }}-be if {{ service.acl_name }}
+    acl {{ service.acl_name_prefix }}_{{ item.name }} path_beg {{ service.path_beg }}
+    use_backend {{ item.name }}-be if {{ service.acl_name_prefix }}_{{ item.name }}
 {%         endif %}
 {%       endfor %}
 
