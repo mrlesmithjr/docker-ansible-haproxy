@@ -9,4 +9,4 @@ COPY config/ansible/ /
 RUN ansible-playbook -i "localhost," -c local /haproxy.yml
 
 # Expose Ports
-EXPOSE 9090
+EXPOSE 80 443 9090
