@@ -51,7 +51,6 @@ backend {{ item.name }}-{{ item.bind_port }}
   mode {{ item.mode }}
 {%         endif %}
   server {{ item.service_name }} {{ item.service_name }}:{{ item.backend_service_port }}
-{%       endfor %}
 {%     endif %}
 {%   endfor %}
 {% endif %}
