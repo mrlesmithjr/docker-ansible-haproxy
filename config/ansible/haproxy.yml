@@ -17,7 +17,7 @@
         services:
           - name: 'web-app' # Define name as back-end service name
             acl_name_prefix: 'url' # Define acl prefix name...
-            acl: true # Define if acl mode should be used
+            acl: false # Define if acl mode should be used
             backend_service_port: '80' # Define back-end service listening port
             path_beg: '/apache' # Define /name for redirect...ie...http://haproxy/apache or http://haproxy/something
             prefix_redirect: '/'
